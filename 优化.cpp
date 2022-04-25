@@ -8,30 +8,30 @@ using namespace std;
 
 typedef struct node
 {
-	char data;//½ÚµãÊı¾İ
-	struct node* fir, * sib, * dad;//Ö¸ÏòµÚÒ»¸ö×Ó½Úµã¡¢ÏÂÒ»¸öĞÖµÜ½ÚµãµÄÖ¸Õë¡¢¸¸½Úµã
-	int childnum;//º¢×ÓÊı
-	int depth;//Éî¶È
-	int totaltime;//¼ÆËã×ÜÊ±¼ä
-	int caltime;//¼ÆËãÊ±¼ä
-	int savetime;//±£´æÊ±¼ä
-	bool flag;//ÅĞ¶ÏÒª²»Òª±£´æ
+	char data;//èŠ‚ç‚¹æ•°æ®
+	struct node* fir, * sib, * dad;//æŒ‡å‘ç¬¬ä¸€ä¸ªå­èŠ‚ç‚¹ã€ä¸‹ä¸€ä¸ªå…„å¼ŸèŠ‚ç‚¹çš„æŒ‡é’ˆã€çˆ¶èŠ‚ç‚¹
+	int childnum;//å­©å­æ•°
+	int depth;//æ·±åº¦
+	int totaltime;//è®¡ç®—æ€»æ—¶é—´
+	int caltime;//è®¡ç®—æ—¶é—´
+	int savetime;//ä¿å­˜æ—¶é—´
+	bool flag;//åˆ¤æ–­è¦ä¸è¦ä¿å­˜
 }tr;
 int k = 0, k1 = 0, t0 = 0, t1 = 0,at=0;
 int time0[N], time1[N];
-int root = 1;//×ÓÊ÷¸ù½Úµã
+int root = 1;//å­æ ‘æ ¹èŠ‚ç‚¹
 
-int createnode(tr* t)//Ëæ»úÉú³É½ÚµãÊıÁ¿
+int createnode(tr* t)//éšæœºç”ŸæˆèŠ‚ç‚¹æ•°é‡
 {
 	int p;
 	p = rand() % 9 + 1;
-	if (p >= 1 && p < 4)//0¸öº¢×Ó
+	if (p >= 1 && p < 4)//0ä¸ªå­©å­
 		t->childnum = 0;
-	if (p >= 4 && p < 8)//1¸öº¢×Ó
+	if (p >= 4 && p < 8)//1ä¸ªå­©å­
 		t->childnum = 1;
-	if (p >= 8 && p < 9)//2¸öº¢×Ó
+	if (p >= 8 && p < 9)//2ä¸ªå­©å­
 		t->childnum = 2;
-	if (p >= 9 && p < 10)//3¸öº¢×Ó
+	if (p >= 9 && p < 10)//3ä¸ªå­©å­
 		t->childnum = 3;
 	return t->childnum;
 }
@@ -45,7 +45,7 @@ void inittree(tr* t, int depth,int childnum)
 	}
 	if (depth <4)
 	{
-		if (t->childnum == 0)//Ò¶×Ó½Úµã
+		if (t->childnum == 0)//å¶å­èŠ‚ç‚¹
 		{
 			while (t->data == 'A' && t->childnum == 0)
 				t->childnum = createnode(t);
@@ -54,7 +54,7 @@ void inittree(tr* t, int depth,int childnum)
 				t->fir = NULL;
 			}
 		}
-		if (t->childnum == 1)//º¢×ÓÊıÎª1
+		if (t->childnum == 1)//å­©å­æ•°ä¸º1
 		{
 			tr* child = new node();
 			child->data = t->data + 1;
@@ -65,7 +65,7 @@ void inittree(tr* t, int depth,int childnum)
 			child->sib = NULL;
 			inittree(child, child->depth,child->childnum);
 		}
-		if (t->childnum == 2)//º¢×ÓÊıÎª2
+		if (t->childnum == 2)//å­©å­æ•°ä¸º2
 		{
 			tr* child1 = new node();
 			child1->data = t->data + 1;
@@ -84,7 +84,7 @@ void inittree(tr* t, int depth,int childnum)
 			inittree(child2, child2->depth, child2->childnum);
 			
 		}
-		if (t->childnum == 3)//º¢×ÓÊıÎª3
+		if (t->childnum == 3)//å­©å­æ•°ä¸º3
 		{
 			tr* child1 = new node();
 			child1->data = t->data + 1;
@@ -112,7 +112,7 @@ void inittree(tr* t, int depth,int childnum)
 	}
 }
 
-void showtr(tr* t)//´òÓ¡¶à²æÊ÷
+void showtr(tr* t)//æ‰“å°å¤šå‰æ ‘
 {
 	if (t)
 	{
@@ -134,18 +134,18 @@ void showtr(tr* t)//´òÓ¡¶à²æÊ÷
 	}
 }
 
-int leaf(tr* t, int root)//¼ÆËãÒ¶×Ó½Úµã¸öÊı
+int leaf(tr* t, int root)//è®¡ç®—å¶å­èŠ‚ç‚¹ä¸ªæ•°
 {
 	if (!t)
 		return 0;
-	else if (!t->fir)//Ò¶×Ó½Úµã
-		return 1 + leaf(t->sib,root);// ¶ş²æÁ´µÄ½á¹¹ÌØĞÔµ¼ÖÂĞèÒª°ÑĞÖµÜ½Úµã·µ»ØµÄ¸öÊı¼ÓÒ»
-	else if (root == 1)//¸ù½ÚµãÇé¿ö
+	else if (!t->fir)//å¶å­èŠ‚ç‚¹
+		return 1 + leaf(t->sib,root);// äºŒå‰é“¾çš„ç»“æ„ç‰¹æ€§å¯¼è‡´éœ€è¦æŠŠå…„å¼ŸèŠ‚ç‚¹è¿”å›çš„ä¸ªæ•°åŠ ä¸€
+	else if (root == 1)//æ ¹èŠ‚ç‚¹æƒ…å†µ
 	{
 		root++;
 		return leaf(t->fir,root);
 	}
-	else //·ÇÒ¶×Ó½Úµã/¸ù½Úµã
+	else //éå¶å­èŠ‚ç‚¹/æ ¹èŠ‚ç‚¹
 		return leaf(t->fir,root) + leaf(t->sib,root);
 }
 
@@ -157,7 +157,7 @@ void allpath(tr* t, char* path, int n,int caltime,int totaltime)
 		{
 			cout << path[i] << " ";
 		}
-		cout <<"¼ÆËãÊ±¼äÊÇ£º"<<totaltime<< endl;
+		cout <<"è®¡ç®—æ—¶é—´æ˜¯ï¼š"<<totaltime<< endl;
 		time0[k] = totaltime;
 		k++;
 	}
@@ -173,12 +173,12 @@ void allpath(tr* t, char* path, int n,int caltime,int totaltime)
 	}
 }
 
-void getpath(tr* t)//´òÓ¡¸ùµ½Ò¶×Ó½ÚµãµÄËùÓĞÂ·¾¶²¢¼ÆËãÊ±¼ä(dfs)
+void getpath(tr* t)//æ‰“å°æ ¹åˆ°å¶å­èŠ‚ç‚¹çš„æ‰€æœ‰è·¯å¾„å¹¶è®¡ç®—æ—¶é—´(dfs)
 {
 	char path[N];
 	path[0] = t->data;
 	allpath(t, path, 1, t->caltime, t->totaltime);
-	 cout << "×ÜÊ±¼ä£º";
+	 cout << "æ€»æ—¶é—´ï¼š";
 	 for (int i = 0; i < leaf(t,root); i++)
 	 {
 		 t0 += time0[i];
@@ -189,72 +189,72 @@ void getpath(tr* t)//´òÓ¡¸ùµ½Ò¶×Ó½ÚµãµÄËùÓĞÂ·¾¶²¢¼ÆËãÊ±¼ä(dfs)
 
 void newallpath(tr* t, char* path, int n, int caltime, int savetime, int totaltime, bool flag, int childnum,int snum)
 {	
-	if (t->childnum==0)//ÒÑ¾­ÊÇÒ¶×Ó½Úµã
+	if (t->childnum==0)//å·²ç»æ˜¯å¶å­èŠ‚ç‚¹
 	{
 		for (int i = 0; i < n; ++i)
 		{
 			cout << path[i] << " ";
 		}
-		cout << "¼ÆËãÊ±¼äÊÇ£º" << totaltime <<",±£´æÁË"<<snum<<"¸ö½Úµã"<< endl;
+		cout << "è®¡ç®—æ—¶é—´æ˜¯ï¼š" << totaltime <<",ä¿å­˜äº†"<<snum<<"ä¸ªèŠ‚ç‚¹"<< endl;
 		time1[k1] = totaltime;
 		k1++;
 	}
 	
-	if (t->childnum>0)//ÅĞ¶ÏÓĞÎŞ×Ó½Úµã
-	{//¾ÍËãÖ»ÓĞÒ»¸ö×Ó½Úµã£¬×Ó½ÚµãÏÂÃæµÄËï×Ó½Úµã¿ÉÄÜ»¹ÓĞ¶à¸ö×Ó½Úµã
+	if (t->childnum>0)//åˆ¤æ–­æœ‰æ— å­èŠ‚ç‚¹
+	{//å°±ç®—åªæœ‰ä¸€ä¸ªå­èŠ‚ç‚¹ï¼Œå­èŠ‚ç‚¹ä¸‹é¢çš„å­™å­èŠ‚ç‚¹å¯èƒ½è¿˜æœ‰å¤šä¸ªå­èŠ‚ç‚¹
 		path[n] = t->fir->data;
-		if ((leaf(t,root) - 1) * caltime > savetime)//ÅĞ¶ÏÒÔtÎª¸ù½ÚµãµÄ×ÓÊ÷ÏÂÓĞ¼¸¸öÒ¶×Ó½Úµã
+		if ((leaf(t,root) - 1) * caltime > savetime)//åˆ¤æ–­ä»¥tä¸ºæ ¹èŠ‚ç‚¹çš„å­æ ‘ä¸‹æœ‰å‡ ä¸ªå¶å­èŠ‚ç‚¹
 		{
 			t->flag = 1;
 			snum++;
-			cout <<"¸Ã×ÓÊ÷Ò¶×Ó½ÚµãÎª£º"<<leaf(t,root)<< ",±£´æ½Úµã"<<t->data << endl;
+			cout <<"è¯¥å­æ ‘å¶å­èŠ‚ç‚¹ä¸ºï¼š"<<leaf(t,root)<< ",ä¿å­˜èŠ‚ç‚¹"<<t->data << endl;
 			totaltime += savetime;
 		}
 		totaltime += caltime;
-		newallpath(t->fir, path, n + 1, caltime, savetime, totaltime, t->flag, t->fir->childnum,snum);//¼ÌĞø±éÀú×Ó½Úµã
+		newallpath(t->fir, path, n + 1, caltime, savetime, totaltime, t->flag, t->fir->childnum,snum);//ç»§ç»­éå†å­èŠ‚ç‚¹
 	}
-	//1¡¢×ßµ½Ò¶×Ó½ÚµãÁË£¬±éÀúÒ¶×Ó½ÚµãµÄĞÖµÜ£» 2¡¢·ÇÒ¶×Ó½Úµã£¬Æä×ÓÊ÷ÒÑ±éÀúÍê£¬×¼±¸±éÀúĞÖµÜ½ÚµãµÄ×ÓÊ÷
-	if (t->sib)//ÅĞ¶ÏÓĞÎŞĞÖµÜ
+	//1ã€èµ°åˆ°å¶å­èŠ‚ç‚¹äº†ï¼Œéå†å¶å­èŠ‚ç‚¹çš„å…„å¼Ÿï¼› 2ã€éå¶å­èŠ‚ç‚¹ï¼Œå…¶å­æ ‘å·²éå†å®Œï¼Œå‡†å¤‡éå†å…„å¼ŸèŠ‚ç‚¹çš„å­æ ‘
+	if (t->sib)//åˆ¤æ–­æœ‰æ— å…„å¼Ÿ
 	{
 		path[n - 1] = t->sib->data;		
-		if (t->childnum==0)//Çé¿ö1
+		if (t->childnum==0)//æƒ…å†µ1
 		{
-			/*if (t->sib->childnum == 0)//tĞÖµÜ½ÚµãÊÇÒ¶×Ó½Úµã
+			/*if (t->sib->childnum == 0)//tå…„å¼ŸèŠ‚ç‚¹æ˜¯å¶å­èŠ‚ç‚¹
 			{
 				totaltime = (n - snum) * caltime;
 			}
-			else//tĞÖµÜ½Úµã²»ÊÇÒ¶×Ó½Úµã
+			else//tå…„å¼ŸèŠ‚ç‚¹ä¸æ˜¯å¶å­èŠ‚ç‚¹
 			{
 				totaltime = (n - snum) * caltime;
-			}*///¶¼Ò»Ñù
+			}*///éƒ½ä¸€æ ·
 			totaltime = (n - snum) * caltime;
 		}
-		else//Çé¿ö2
+		else//æƒ…å†µ2
 		{
-			if (t->flag)//tÊÇ±£´æÁËµÄ½Úµã¡¢t²»ÊÇÒ¶×Ó½Úµã
-			{//²»´æÔÚt²»±£´æt×Ó½Úµã±£´æµÄÇé¿ö£¬Èç¹ûtÒÑ¾­±£´æÄÇÃ´¸¸½ÚµãÒ²»á±£´æ
-				snum -= 1;//×¼±¸±éÀútĞÖµÜ£¬±£´æÁËµÄ½ÚµãÊı¼õ1£¨¼õÈ¥t£©
+			if (t->flag)//tæ˜¯ä¿å­˜äº†çš„èŠ‚ç‚¹ã€tä¸æ˜¯å¶å­èŠ‚ç‚¹
+			{//ä¸å­˜åœ¨tä¸ä¿å­˜tå­èŠ‚ç‚¹ä¿å­˜çš„æƒ…å†µï¼Œå¦‚æœtå·²ç»ä¿å­˜é‚£ä¹ˆçˆ¶èŠ‚ç‚¹ä¹Ÿä¼šä¿å­˜
+				snum -= 1;//å‡†å¤‡éå†tå…„å¼Ÿï¼Œä¿å­˜äº†çš„èŠ‚ç‚¹æ•°å‡1ï¼ˆå‡å»tï¼‰
 				totaltime = (n - snum) * caltime;
-				if (!t->sib->fir && n == 2)//±»±£´æÁË¸ù½ÚµãÏÂµÄÒ¶×Ó½Úµã
+				if (!t->sib->fir && n == 2)//è¢«ä¿å­˜äº†æ ¹èŠ‚ç‚¹ä¸‹çš„å¶å­èŠ‚ç‚¹
 					totaltime = caltime;
 			}
-			else//tÃ»±»±£´æ
+			else//tæ²¡è¢«ä¿å­˜
 			{
 				totaltime = (n - snum) * caltime;
 			}
 		}
-		newallpath(t->sib, path, n, caltime, savetime, totaltime, t->flag, t->sib->childnum,snum);//Ö¸ÏòĞÖµÜ½Úµã£¬±éÀúËûµÄ×Ó½Úµã
+		newallpath(t->sib, path, n, caltime, savetime, totaltime, t->flag, t->sib->childnum,snum);//æŒ‡å‘å…„å¼ŸèŠ‚ç‚¹ï¼Œéå†ä»–çš„å­èŠ‚ç‚¹
 	}
 	
 }
 
-void newgetpath(tr* t)//Ìá¸ßĞ§ÂÊºó´òÓ¡¸ùµ½Ò¶×Ó½ÚµãµÄËùÓĞÂ·¾¶ºÍÊ±¼ä(dfs)
+void newgetpath(tr* t)//æé«˜æ•ˆç‡åæ‰“å°æ ¹åˆ°å¶å­èŠ‚ç‚¹çš„æ‰€æœ‰è·¯å¾„å’Œæ—¶é—´(dfs)
 {
 	char path[N];
 	path[0] = t->data;
 	
 	newallpath(t, path, 1, t->caltime, t->savetime, t->totaltime,t->flag, t->childnum, 0);
-	cout << "×ÜÊ±¼ä£º";
+	cout << "æ€»æ—¶é—´ï¼š";
 	for (int i = 0; i < leaf(t,root); i++)
 	{
 		t1 += time1[i];
@@ -267,8 +267,8 @@ int main()
 {	
 	srand((unsigned)time(NULL));
 	int p=0;
-	double eff =0;//Ìá¸ßĞ§ÂÊ
-	double alleff=0;//×ÜĞ§ÂÊ
+	double eff =0;//æé«˜æ•ˆç‡
+	double alleff=0;//æ€»æ•ˆç‡
 	while (p < 20)
 	{
 		tr* tree = new node();
@@ -281,21 +281,21 @@ int main()
 			createnode(tree);
 		inittree(tree, tree->depth, tree->childnum);
 		showtr(tree);
-		cout << endl << "Ã¿¸ö½ÚµãµÄ¼ÆËãÊ±¼ä£º" << tree->caltime << endl;
-		cout << "Ã¿¸ö½ÚµãµÄ±£´æÊ±¼ä£º" << tree->savetime << endl;
+		cout << endl << "æ¯ä¸ªèŠ‚ç‚¹çš„è®¡ç®—æ—¶é—´ï¼š" << tree->caltime << endl;
+		cout << "æ¯ä¸ªèŠ‚ç‚¹çš„ä¿å­˜æ—¶é—´ï¼š" << tree->savetime << endl;
 		createnode(tree);
-		/*cout <<endl<< "ÊäÈëÃ¿¸ö½ÚµãµÄ¼ÆËãÊ±¼ä£º";
+		/*cout <<endl<< "è¾“å…¥æ¯ä¸ªèŠ‚ç‚¹çš„è®¡ç®—æ—¶é—´ï¼š";
 		cin >> tree->caltime;
-		cout << "ÊäÈëÃ¿¸ö½ÚµãµÄ±£´æÊ±¼ä£º";
+		cout << "è¾“å…¥æ¯ä¸ªèŠ‚ç‚¹çš„ä¿å­˜æ—¶é—´ï¼š";
 		cin >> tree->savetime;*/
 		tree->totaltime = tree->caltime;
-		cout << "´Ó¸ù½Úµãµ½Ò¶×Ó½ÚµãµÄËùÓĞÂ·¾¶:" << endl;
+		cout << "ä»æ ¹èŠ‚ç‚¹åˆ°å¶å­èŠ‚ç‚¹çš„æ‰€æœ‰è·¯å¾„:" << endl;
 		getpath(tree);
 		cout << endl;
-		cout << "ÓÅ»¯ºó´Ó¸ù½Úµãµ½Ò¶×Ó½ÚµãµÄËùÓĞÂ·¾¶:" << endl;
+		cout << "ä¼˜åŒ–åä»æ ¹èŠ‚ç‚¹åˆ°å¶å­èŠ‚ç‚¹çš„æ‰€æœ‰è·¯å¾„:" << endl;
 		newgetpath(tree);
 		eff = 100 * (t0 - t1) / t0;
-		cout << "½ÚÊ¡Ê±¼ä£º"<<t0-t1<<",Ìá¸ßĞ§ÂÊ£º"<< eff<<"%"<<endl<<endl;
+		cout << "èŠ‚çœæ—¶é—´ï¼š"<<t0-t1<<",æé«˜æ•ˆç‡ï¼š"<< eff<<"%"<<endl<<endl;
 		alleff += eff;
 		k = 0; k1 = 0; t0 = 0; t1 = 0; eff = 0;
 		for (int i = 0; i < leaf(tree,root); i++)
@@ -307,5 +307,5 @@ int main()
 		p++;
 		system("pause");
 	}
-	cout << "Ìá¸ßµÄ×ÜĞ§ÂÊÎª£º" << alleff / 20 << "%";
+	cout << "æé«˜çš„æ€»æ•ˆç‡ä¸ºï¼š" << alleff / 20 << "%";
 }
